@@ -1,0 +1,36 @@
+#!/bin/sh
+# Git pre-commit hook that runs multiple hooks specified in $HOOKS_FOLDER.
+# Make sure this script is executable. Bypass hooks with git commit --no-verify.
+
+###########################################################
+# CONFIGURATION:
+########################################################### 
+HOOKS_FOLDER="$(dirname -- "$0")"
+HOOKS="pre-commit-quality-code pre-commit-phpunit"
+
+###########################################################
+# There should be no need to change anything below this line.
+
+set -e
+
+for hook in $HOOKS
+do
+    echo "
+##########################################
+# Running hook: $hook
+##########################################"
+
+    # run hook if it exists
+    # if it returns with nonzero exit with 1 and thus abort the commit
+    if [ -f "$HOOKS_FOLDER/$hook" ]; then
+        "$HOOKS_FOLDER/$hook"
+        if [ $? != 0 ]; then
+            exit 1
+        fi
+    else
+        echo "Error: file $hook not found."
+        echo "Aborting commit. Make sure the hook is in $HOOKS_FOLDER and executable."
+        echo "You can skip all pre-commit hooks with --no-verify (not recommended)."
+        exit 1
+    fi
+done
