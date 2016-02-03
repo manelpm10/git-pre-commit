@@ -3,7 +3,7 @@
 
 // Hook configuration
 $basePath = dirname(__FILE__).'/../..';
-$phpunitExecutable = $basePath.'/bin/phpunit';
+$phpunitExecutable = $basePath.'/bin/phpunit -c '.$basePath.'/app/';
 $testsPath = $basePath.'/tests';
 $project = 'Web Application';
 
